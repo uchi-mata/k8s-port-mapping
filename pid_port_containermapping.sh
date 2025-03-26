@@ -46,7 +46,7 @@ do
   column=$(echo "$line" | cut -d '(' -f 3)
   pname=$(echo "$column" | cut -d '"' -f 2)
   pid=$(echo "$column" | cut -d '=' -f 2 | cut -d ',' -f 1)
-  containerid=$(sed -n 's/.*cri-containerd-\([^.]*\)\.scope.*/\1/p' "/proc/$pid/cgroup")
+  containerid=$(sed -n 's/.*cri-containerd-\([^.]*\)\.scope.*/\1/p' "/proc/$pid/cgroup" | head -n 1)
   if [[ -n "$containerid" ]]; then
     echo -ne "$protocol, $port, $pname, $pid, $containerid, ${containerid_mapping[$containerid]}\n"
   fi

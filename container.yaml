@@ -9,18 +9,18 @@ kind: ClusterRole
 metadata:
   name: pod-reader
 rules:
-- apiGroups: [""]
-  resources: ["pods"]
-  verbs: ["list", "get"]
+  - apiGroups: [""]
+    resources: ["pods"]
+    verbs: ["list", "get"]
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
   name: read-pods
 subjects:
-- kind: ServiceAccount
-  name: pod-reader
-  namespace: default
+  - kind: ServiceAccount
+    name: pod-reader
+    namespace: default
 roleRef:
   kind: ClusterRole
   name: pod-reader
@@ -42,7 +42,28 @@ spec:
         runAsUser: 0
         runAsGroup: 0
       containers:
-      - name: podenumeration
-        image: uchimata/pods-pids-ports
-        securityContext:
-          privileged: true
+        - name: podenumeration
+          image: uchimata/pods-pids-ports
+          imagePullPolicy: Always
+          securityContext:
+            privileged: true
+# ---
+# apiVersion: v1
+# kind: Pod
+# metadata:
+#   name: podenumeration
+# spec:
+#   restartPolicy: Never
+#   hostNetwork: true
+#   hostPID: true
+#   hostIPC: true
+#   serviceAccountName: pod-reader
+#   securityContext:
+#     runAsUser: 0
+#     runAsGroup: 0
+#   containers:
+#     - name: podenumeration
+#       image: uchimata/pods-pids-ports
+#       securityContext:
+#         privileged: true
+#       command: ["sleep", "infinity"]
